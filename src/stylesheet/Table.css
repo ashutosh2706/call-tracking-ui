@@ -1,0 +1,54 @@
+caption {
+    caption-side: top;
+    text-align: left;
+    padding: 10px;
+    font-weight: 500;
+    font-size: 22px;
+    background-color: #cccccc;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    text-align: left;
+    padding: 10px;
+    background-color: #808080;
+    font-weight: 500;
+    font-size: 19px;
+    color: white;
+}
+
+td {
+    padding: 17px;
+    text-align: left;
+    border: 1px solid #a3a8a6;
+}
+
+.table-container {
+    margin-top: 50px;
+    border: 1px solid rgb(87, 165, 255);
+}
+tbody {
+    background-color: white;
+}
+thead th {
+    border: 1px solid #a3a8a6;
+}
+
+
+
+@media screen and (max-width: 450px) {
+    th {
+      font-size: 10px; 
+    }
+    caption {
+        font-size: 10px;
+    }
+    
+    td {
+        padding: 10px;
+    }
+  }

@@ -1,0 +1,41 @@
+.pod-1 {
+    /* position: relative; */
+    background-color: #cccccc;
+    width: 50%;
+    border-radius: 8px;
+    height: 300px;
+    overflow: hidden;
+}
+
+.tab {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.pod-2 {
+    /* position: relative; */
+    background-color: #cccccc;
+    width: 50%;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 300px;
+}
+.pod-info-1 {
+    position: relative;
+    text-align: center;
+    font-weight: 500;
+    font-size: 19px;
+}
+
+.pod-info-2 {
+    /* position: absolute; */
+    /* top: 100px; */
+    /* left: 400px; */
+    height: 40%;
+    font-weight: 500;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
