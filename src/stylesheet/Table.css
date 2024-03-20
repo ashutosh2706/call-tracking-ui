@@ -10,6 +10,7 @@ caption {
 table {
     border-collapse: collapse;
     width: 100%;
+    table-layout: fixed;
 }
 
 th {
@@ -30,6 +31,8 @@ td {
 .table-container {
     margin-top: 50px;
     border: 1px solid rgb(87, 165, 255);
+    max-height: 500px;
+    overflow-y: auto;
 }
 tbody {
     background-color: white;

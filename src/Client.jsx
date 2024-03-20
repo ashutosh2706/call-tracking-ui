@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'react-bootstrap';
-import { Cookie, TelephoneFill, TelephoneXFill } from 'react-bootstrap-icons';
+import { TelephoneFill, TelephoneXFill } from 'react-bootstrap-icons';
 import { HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
 
-
-var conn, intervalId, channelId;
+var conn, intervalId;
 
 const Client = () => {
   
@@ -30,8 +29,8 @@ const Client = () => {
   const initiateCall = async (hospitalName) => {
     if (hospitalName === "H1") {
 
-      setCallStatus("Initiating Call to Hospital 1");
-      conn = new HubConnectionBuilder().withUrl(import.meta.env.VITE_URL_HUB_H1).build();
+      setCallStatus("Initiating call to Hospital 1");
+      conn = new HubConnectionBuilder().withUrl(import.meta.env.VITE_URL_HUB_CALL + "?hid=1").build();
       await conn.start().then(()=>{
         setButtonDisabled(true);
       }).catch(err => {
@@ -41,11 +40,10 @@ const Client = () => {
       });
 
       conn.on("Waiting", () => {
-        setCallStatus('Waiting for agents..');
+        setCallStatus('Waiting for agents...');
       });
 
-      conn.on("Connected", (channel) => {
-        channelId = channel;
+      conn.on("Connected", () => {
         setCallStatus("Connected");
         startTimer();
         setButtonDisabled(true);
@@ -54,12 +52,12 @@ const Client = () => {
       conn.on("ReceiveMessage", (message) => {
         console.log("Message Received: ", message);
       });
-
+      
 
     } else {
 
       setCallStatus("Initiating call to Hospital 2");
-      conn = new HubConnectionBuilder().withUrl(import.meta.env.VITE_URL_HUB_H2).build();
+      conn = new HubConnectionBuilder().withUrl(import.meta.env.VITE_URL_HUB_CALL + "?hid=2").build();
       await conn.start().then(()=>{
         setButtonDisabled(true);
       }).catch(err => {
@@ -72,8 +70,7 @@ const Client = () => {
         setCallStatus("Waiting for agents...");
       });
 
-      conn.on("Connected", (channel) => {
-        channelId = channel;
+      conn.on("Connected", () => {
         setCallStatus("Connected");
         startTimer();
         setButtonDisabled(true);
@@ -87,27 +84,8 @@ const Client = () => {
   };
 
 
-  const sendMessage = (message) => {
-
-    if (channelId && conn && conn.state !== HubConnectionState.Disconnected) {
-      
-      conn.invoke("Transfer", channelId, message)
-      .then((response) => {
-        console.log("Response: ",response);
-      })
-      .catch((err) => {
-        console.error("Error: ", err);
-      })
-
-    } else {
-      console.warn("No agents connected");
-    }
-
-  };
-
   const disconnectCall = () => {
     stopTimer();
-    channelId = null;
     if (conn && conn.state !== HubConnectionState.Disconnected) {
       conn.stop().then(function () {
         setCallStatus("Disconnected");
@@ -118,7 +96,6 @@ const Client = () => {
       setCallStatus("No Ongoing Calls");
     }
     setButtonDisabled(false);
-
   };
 
   return (

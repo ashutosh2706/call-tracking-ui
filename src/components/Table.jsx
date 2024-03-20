@@ -1,18 +1,18 @@
 import '../stylesheet/Table.css'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { HubConnectionState } from '@microsoft/signalr';
-import connection from '../DashboardConnection';
-
+import { DashboardConnection } from "../Dashboard";
+import AgentTimer from './AgentTimer';
 
 const Table = () => {
-
     const [data, setData] = useState([]);
-    const [timer, setTimer] = useState("00:00");
+    const connection = useContext(DashboardConnection);
 
     useEffect(() => {
+
         const fetchData = async () => {
             try {
-                const response = await fetch(import.meta.env.VITE_URL_API + '/agents');
+                const response = await fetch(import.meta.env.VITE_URL_API + '/Agents');
                 if (!response.ok) {
                     throw new Error('Network Error');
                 }
@@ -24,11 +24,13 @@ const Table = () => {
         };
 
         if (connection && connection.state !== HubConnectionState.Disconnected) {
-            // table update 
             connection.on("Update", (data) => {
                 setData(JSON.parse(data));
             });
-        }
+
+            console.log("Registered for table update");
+
+        } else console.log("Connection null for table")
 
         fetchData();
 
@@ -49,24 +51,18 @@ const Table = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        data.map((entry) => (
-                            <tr>
-                                <td>{entry.agentName}</td>
-                                <td>
-                                    {typeof entry.status === 'number' ?
-                                        (entry.status === 1 ? 'Available' : entry.status === 2 ? 'Busy' : 'Leave') :
-                                        entry.status
-                                    }
-                                </td>
-                                <td>{timer}</td>
-                            </tr>
-                        ))
-                    }
+                    {data.map(entry => (
+                        <AgentTimer
+                            key={entry.agentId}
+                            agentId={entry.agentId}
+                            agentName={entry.agentName}
+                            status={entry.status}
+                        />
+                    ))}
                 </tbody>
             </table>
         </div>
-    )
+    );
 }
 
 export default Table
